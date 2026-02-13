@@ -49,6 +49,17 @@
         <label>System prompt</label>
         <textarea id="system" rows="2" placeholder="Optional system instructions"></textarea>
       </div>
+
+      <div class="row">
+        <label>Attach files</label>
+        <div class="attachments">
+          <label class="ghost file">
+            Add Files
+            <input id="file-attach" type="file" multiple />
+          </label>
+          <div id="file-list" class="file-list"></div>
+        </div>
+      </div>
     </section>
 
     <section class="chat" id="chat"></section>
@@ -63,6 +74,7 @@
         </label>
         <button id="btn-send" class="primary">Send</button>
         <button id="btn-clear" class="ghost">Clear Chat</button>
+        <button id="btn-clear-memory" class="ghost">Clear Memory</button>
       </div>
     </section>
   </div>
@@ -75,5 +87,7 @@
   </template>
 
   <script src="app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </body>
 </html>
