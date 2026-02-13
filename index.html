@@ -1,0 +1,77 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Local AI Suite</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <div>
+        <div class="title">Local AI Suite</div>
+        <div class="subtitle">Portable chat for OpenAI and Anthropic (Claude)</div>
+      </div>
+      <div class="right">
+        <button id="btn-export" class="ghost">Export</button>
+        <label class="ghost file">
+          Import
+          <input id="file-import" type="file" accept="application/json" />
+        </label>
+      </div>
+    </header>
+
+    <section class="panel">
+      <div class="row">
+        <label>Provider</label>
+        <div class="tabs" role="tablist">
+          <button id="tab-openai" class="tab active" role="tab">OpenAI</button>
+          <button id="tab-anthropic" class="tab" role="tab">Anthropic</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <label>API key</label>
+        <div class="keybox">
+          <input id="api-key" type="password" placeholder="Paste key here" />
+          <button id="btn-save-key">Save</button>
+          <button id="btn-clear-key" class="ghost">Clear</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <label>Model</label>
+        <div class="modelbox">
+          <input id="model" type="text" placeholder="Type model name" />
+          <button id="btn-default-model" class="ghost">Use Example</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <label>System prompt</label>
+        <textarea id="system" rows="2" placeholder="Optional system instructions"></textarea>
+      </div>
+    </section>
+
+    <section class="chat" id="chat"></section>
+
+    <section class="composer">
+      <textarea id="input" rows="3" placeholder="Type your message. Shift+Enter for newline."></textarea>
+      <div class="actions">
+        <button id="btn-send" class="primary">Send</button>
+        <button id="btn-clear" class="ghost">Clear Chat</button>
+      </div>
+    </section>
+  </div>
+
+  <template id="msg-template">
+    <div class="msg">
+      <div class="role"></div>
+      <div class="content"></div>
+    </div>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
