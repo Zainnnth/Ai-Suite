@@ -163,6 +163,7 @@ button:disabled { opacity: 0.6; cursor: not-allowed; }
   gap: 10px;
   justify-content: flex-end;
   margin-top: 8px;
+  flex-wrap: wrap;
 }
 
 .file input { display: none; }

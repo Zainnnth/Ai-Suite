@@ -25,6 +25,7 @@ const els = {
   btnClearKey: document.getElementById('btn-clear-key'),
   model: document.getElementById('model'),
   btnDefaultModel: document.getElementById('btn-default-model'),
+  modelList: document.getElementById('model-list'),
   system: document.getElementById('system'),
   chat: document.getElementById('chat'),
   input: document.getElementById('input'),
@@ -35,6 +36,20 @@ const els = {
 };
 
 const STORAGE_KEY = 'local-ai-suite-v1';
+const MODEL_SUGGESTIONS = {
+  openai: [
+    'gpt-4o',
+    'gpt-4o-mini',
+    'gpt-4.1',
+    'gpt-4.1-mini',
+    'o4-mini'
+  ],
+  anthropic: [
+    'claude-3-5-sonnet-20241022',
+    'claude-3-5-haiku-20241022',
+    'claude-3-opus-20240229'
+  ]
+};
 
 function saveState() {
   const { keys, ...rest } = state;
@@ -61,6 +76,7 @@ function setProvider(provider) {
   els.apiKey.value = '';
   els.model.value = state.model[provider] || '';
   els.system.value = state.system[provider] || '';
+  renderModelList();
   renderChat();
   saveState();
 }
@@ -200,6 +216,16 @@ function setDefaultModel() {
   }
   state.model[state.provider] = els.model.value;
   saveState();
+}
+
+function renderModelList() {
+  const list = MODEL_SUGGESTIONS[state.provider] || [];
+  els.modelList.innerHTML = '';
+  list.forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name;
+    els.modelList.appendChild(opt);
+  });
 }
 
 function exportState() {

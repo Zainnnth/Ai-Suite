@@ -13,13 +13,6 @@
         <div class="title">Local AI Suite</div>
         <div class="subtitle">Portable chat for OpenAI and Anthropic (Claude)</div>
       </div>
-      <div class="right">
-        <button id="btn-export" class="ghost">Export</button>
-        <label class="ghost file">
-          Import
-          <input id="file-import" type="file" accept="application/json" />
-        </label>
-      </div>
     </header>
 
     <section class="panel">
@@ -46,7 +39,8 @@
       <div class="row">
         <label>Model</label>
         <div class="modelbox">
-          <input id="model" type="text" placeholder="Type model name" />
+          <input id="model" type="text" placeholder="Type model name" list="model-list" />
+          <datalist id="model-list"></datalist>
           <button id="btn-default-model" class="ghost">Use Example</button>
         </div>
       </div>
@@ -62,6 +56,11 @@
     <section class="composer">
       <textarea id="input" rows="3" placeholder="Type your message. Shift+Enter for newline."></textarea>
       <div class="actions">
+        <button id="btn-export" class="ghost">Export</button>
+        <label class="ghost file">
+          Import
+          <input id="file-import" type="file" accept="application/json" />
+        </label>
         <button id="btn-send" class="primary">Send</button>
         <button id="btn-clear" class="ghost">Clear Chat</button>
       </div>
