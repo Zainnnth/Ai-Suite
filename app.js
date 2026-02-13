@@ -22,7 +22,6 @@ const els = {
   tabOpenAI: document.getElementById('tab-openai'),
   tabAnthropic: document.getElementById('tab-anthropic'),
   apiKey: document.getElementById('api-key'),
-  btnSaveKey: document.getElementById('btn-save-key'),
   btnClearKey: document.getElementById('btn-clear-key'),
   model: document.getElementById('model'),
   btnDefaultModel: document.getElementById('btn-default-model'),
@@ -38,7 +37,8 @@ const els = {
 const STORAGE_KEY = 'local-ai-suite-v1';
 
 function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  const { keys, ...rest } = state;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(rest));
 }
 
 function loadState() {
@@ -58,7 +58,7 @@ function setProvider(provider) {
   state.provider = provider;
   els.tabOpenAI.classList.toggle('active', provider === 'openai');
   els.tabAnthropic.classList.toggle('active', provider === 'anthropic');
-  els.apiKey.value = state.keys[provider] || '';
+  els.apiKey.value = '';
   els.model.value = state.model[provider] || '';
   els.system.value = state.system[provider] || '';
   renderChat();
@@ -203,7 +203,8 @@ function setDefaultModel() {
 }
 
 function exportState() {
-  const data = JSON.stringify(state, null, 2);
+  const { keys, ...rest } = state;
+  const data = JSON.stringify(rest, null, 2);
   const blob = new Blob([data], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -234,15 +235,9 @@ function importState(file) {
 els.tabOpenAI.addEventListener('click', () => setProvider('openai'));
 els.tabAnthropic.addEventListener('click', () => setProvider('anthropic'));
 
-els.btnSaveKey.addEventListener('click', () => {
-  state.keys[state.provider] = els.apiKey.value.trim();
-  saveState();
-});
-
 els.btnClearKey.addEventListener('click', () => {
   state.keys[state.provider] = '';
   els.apiKey.value = '';
-  saveState();
 });
 
 els.model.addEventListener('input', () => {
@@ -253,6 +248,10 @@ els.model.addEventListener('input', () => {
 els.system.addEventListener('input', () => {
   state.system[state.provider] = els.system.value;
   saveState();
+});
+
+els.apiKey.addEventListener('input', () => {
+  state.keys[state.provider] = els.apiKey.value.trim();
 });
 
 els.btnDefaultModel.addEventListener('click', setDefaultModel);
