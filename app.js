@@ -1,4 +1,4 @@
-﻿const state = {
+const state = {
   provider: 'openai',
   chats: {
     openai: [],
@@ -99,6 +99,8 @@ function renderChat() {
   const template = document.getElementById('msg-template');
   msgs.forEach(m => {
     const node = template.content.cloneNode(true);
+    const msgEl = node.querySelector('.msg');
+    if (m.role === 'system') msgEl.classList.add('msg-system');
     node.querySelector('.role').textContent = m.role;
     const fileNote = m.attachments && m.attachments.length
       ? `\n\n[Files: ${m.attachments.map(a => a.name).join(', ')}]`
@@ -149,9 +151,27 @@ function pushMessage(role, content, attachments = []) {
   saveState();
 }
 
+function trySetKeyFromInput(text) {
+  // Detect patterns: "key: sk-...", "/key sk-...", "apikey: ..."
+  const match = text.match(/^(?:\/key|key\s*:|apikey\s*:)\s*(\S+)$/i);
+  if (match) {
+    const newKey = match[1].trim();
+    state.keys[state.provider] = newKey;
+    els.apiKey.value = newKey;
+    els.input.value = '';
+    pushMessage('system', `✅ API key set for ${state.provider === 'openai' ? 'OpenAI' : 'Anthropic'}.`);
+    return true;
+  }
+  return false;
+}
+
 async function sendMessage() {
   const text = els.input.value.trim();
   if (!text) return;
+
+  // Allow setting the API key inline from the chat box
+  if (trySetKeyFromInput(text)) return;
+
   const key = state.keys[state.provider];
   const model = (state.model[state.provider] || '').trim();
   if (!key) {
@@ -228,7 +248,7 @@ async function callOpenAI(key, model) {
     input: buildInputForOpenAI()
   };
 
-  const res = await fetch('https://api.openai.com/v1/responses', {
+  const res = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://api.openai.com/v1/responses'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -285,7 +305,7 @@ async function callAnthropic(key, model) {
   const sys = (state.system.anthropic || '').trim();
   if (sys) body.system = sys;
 
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
+  const res = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://api.anthropic.com/v1/messages'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -362,7 +382,7 @@ async function uploadOpenAIFile(key, file) {
   form.append('file', file);
   form.append('purpose', 'user_data');
 
-  const res = await fetch('https://api.openai.com/v1/files', {
+  const res = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://api.openai.com/v1/files'), {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${key}`
@@ -384,7 +404,7 @@ async function uploadAnthropicFile(key, file) {
   const form = new FormData();
   form.append('file', file);
 
-  const res = await fetch('https://api.anthropic.com/v1/files', {
+  const res = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://api.anthropic.com/v1/files'), {
     method: 'POST',
     headers: {
       'x-api-key': key,
