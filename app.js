@@ -248,7 +248,7 @@ async function callOpenAI(key, model) {
     input: buildInputForOpenAI()
   };
 
-  const res = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://api.openai.com/v1/responses'), {
+  const res = await fetch('https://api.openai.com/v1/responses', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -305,13 +305,14 @@ async function callAnthropic(key, model) {
   const sys = (state.system.anthropic || '').trim();
   if (sys) body.system = sys;
 
-  const res = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://api.anthropic.com/v1/messages'), {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': key,
       'anthropic-version': '2023-06-01',
-      'anthropic-beta': 'files-api-2025-04-14'
+      'anthropic-beta': 'files-api-2025-04-14',
+      'anthropic-dangerous-direct-browser-access': 'true'
     },
     body: JSON.stringify(body)
   });
@@ -382,7 +383,7 @@ async function uploadOpenAIFile(key, file) {
   form.append('file', file);
   form.append('purpose', 'user_data');
 
-  const res = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://api.openai.com/v1/files'), {
+  const res = await fetch('https://api.openai.com/v1/files', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${key}`
@@ -404,12 +405,13 @@ async function uploadAnthropicFile(key, file) {
   const form = new FormData();
   form.append('file', file);
 
-  const res = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://api.anthropic.com/v1/files'), {
+  const res = await fetch('https://api.anthropic.com/v1/files', {
     method: 'POST',
     headers: {
       'x-api-key': key,
       'anthropic-version': '2023-06-01',
-      'anthropic-beta': 'files-api-2025-04-14'
+      'anthropic-beta': 'files-api-2025-04-14',
+      'anthropic-dangerous-direct-browser-access': 'true'
     },
     body: form
   });
